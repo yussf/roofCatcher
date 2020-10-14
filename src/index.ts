@@ -16,7 +16,7 @@ if (args.length === 3) {
   await manager.init();
   await manager.registerHandler(new arpejHandler(arpej_urls));
   await manager.registerHandler(new crousHandler(crous_url));
-  manager.registerMessenger(new fbMessenger(), { webhook: false });
+  manager.registerMessenger(new fbMessenger(), { webhook: true });
   const scheduler = new Scheduler(manager);
   await scheduler.start(mode);
 })();
