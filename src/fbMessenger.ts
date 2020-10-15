@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 export class fbMessenger implements MessengerInterface {
+  app = express();
   sendMessage = async (text: string): Promise<boolean> => {
     const url = "https://graph.facebook.com/v8.0/me/messages?access_token=";
     const secret_token = process.env.SECRET_TOKEN;
@@ -28,14 +29,12 @@ export class fbMessenger implements MessengerInterface {
     return res;
   };
   registerWebhook = (): void => {
-    const app = express();
-
-    app.post("/webhook", (req, res) => {
+    this.app.post("/webhook", (req, res) => {
       console.log(req?.body);
       res.status(200).send("EVENT_RECEIVED");
     });
 
-    app.get("/webhook", (req, res) => {
+    this.app.get("/webhook", (req, res) => {
       let VERIFY_TOKEN = process.env.VERIFY_TOKEN;
       let mode = req.query["hub.mode"];
       let token = req.query["hub.verify_token"];
@@ -50,7 +49,7 @@ export class fbMessenger implements MessengerInterface {
       }
     });
 
-    app.listen(process.env.PORT || 1337, () =>
+    this.app.listen(process.env.PORT || 1337, () =>
       console.log(`Listening on ${process.env.PORT}`)
     );
   };
